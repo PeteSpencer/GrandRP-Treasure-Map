@@ -1,6 +1,6 @@
 ## GTA V - GrandRP - Treasure Map
 
-https://grpanarchy99.github.io/GrandRP-Treasure-Map/
+https://petespencer.github.io/GrandRP-Treasure-Map/
 
 This interactive map is a derivative of work created by Jesse Gardner (see below) as the Grand Theft Auto V Interactive Map. This map focuses on capturing map location for treasures that spawn in GrandRP servers every hour for immediate use by our in-game family, Anarchy99 (English Server #2).
 

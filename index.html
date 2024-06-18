@@ -90,7 +90,7 @@
           [8192, 8192],
         ];
         map.attributionControl.addAttribution(
-          'Designed for Anarchy 99 | GTA V &copy; <a href= "www.rockstargames.com">Rockstar Games</a> | GrandRP &copy; <a href= "www.gta5grand.com">GrandRP</a> | Icons &copy<a href= "www.flaticon.com"> flaticon</a>'
+          'Designed for GrandRP DE3 Family Spencers | GTA V &copy; <a href= "www.rockstargames.com">Rockstar Games</a> | GrandRP &copy; <a href= "www.gta5grand.com">GrandRP</a> | Icons &copy<a href= "www.flaticon.com"> flaticon</a>'
         );
         //Initialize each base layer
         var atlas = L.imageOverlay('images/gtav.png', bounds).addTo(map);
@@ -182,9 +182,7 @@
         });
 
         (async function () {
-          const treasureJsonString = await fetch(
-            'GrandRP-Treasure-Map/geojson/treasure.json'
-          );
+          const treasureJsonString = await fetch('geojson/treasure.json');
           const response = await treasureJsonString.json();
           const treasures = response.features.filter(
             (elem) => elem.properties.ptype === 'Treasure'
