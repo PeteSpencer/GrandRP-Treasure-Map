@@ -1,167 +1,236 @@
 <!DOCTYPE html>
-<html lang='en'>
+<html lang="en">
+  <html>
+    <head>
+      <link
+        rel="stylesheet"
+        href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+        crossorigin=""
+      />
+      <script
+        src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        crossorigin=""
+      ></script>
+      <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+      <style>
+        .leaflet-popup-content-wrapper {
+          background-color: gray;
+        }
 
-<html>
+        .leaflet-control-layers-expanded {
+          background-color: #2da0e2;
+          background-size: 100%;
+          background-image: url('images/x.png');
+          transition-property: opacity;
+          transition-duration: 1s;
+          opacity: 70%;
+        }
 
-<head>
-  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.5.1/dist/leaflet.css" integrity="sha512-xwE/Az9zrjBIphAcBb3F6JVqxf46+CDLwfLMHloNu6KEQCAWi6HcDUbeOfBIptF7tcCzusKFjFw2yuvEpDL9wQ==" crossorigin="" />
-  <script src="https://unpkg.com/leaflet@1.5.1/dist/leaflet.js" integrity="sha512-GffPMF3RvMeYyc1LWMHtK8EbPv0iNZ8/oTtHPx9/cc2ILxQ+u905qIwdpULaqDkyBKgOaB57QTMg7ztg8Jm2Og==" crossorigin=""></script>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
-  <style>
-    .leaflet-popup-content-wrapper {
-      background-color: gray;
-    }
+        .leaflet-control-layers-expanded:hover {
+          opacity: 100%;
+        }
 
-    .leaflet-control-layers-expanded {
-      background-color: #2da0e2;
-      background-size: 100%;
-      background-image: url("images/x.png");
-      transition-property: opacity;
-      transition-duration: 1s;
-      opacity: 70%;
-    }
+        .leaflet-popup-tip {
+          background-color: gray;
+          opacity: 0%;
+        }
 
-    .leaflet-control-layers-expanded:hover {
-      opacity: 100%;
-    }
+        .leaflet-popup-close-button {
+          background-color: gray;
+          opacity: 0%;
+        }
 
-    .leaflet-popup-tip {
-      background-color: gray;
-      opacity: 0%;
+        .popupImage {
+          max-width: 100%;
+          max-height: 100%;
+        }
 
-    }
+        .popupImage:hover {
+          transform: scale(5);
+          opacity: 1 !important;
+          border-style: solid;
+          border-color: gray;
+          border-width: 2px;
+          z-index: 1000 !important;
+        }
 
-    .leaflet-popup-close-button {
-      background-color: gray;
-      opacity: 0%;
-    }
+        .gtav {
+          margin: 0 auto;
+        }
 
-    .popupImage {
-      max-width: 100%;
-      max-height: 100%;
+        body {
+          padding: 0;
+          margin: 0;
+        }
 
-    }
+        html,
+        body,
+        #map {
+          height: 100%;
+          width: 100%;
+        }
+      </style>
+    </head>
+    <title>GTA V GrandRP Treasure Map</title>
 
-    .popupImage:hover {
-      transform: scale(5);
-      opacity: 1 !important;
-      border-style: solid;
-      border-color: gray;
-      border-width: 2px;
-      z-index: 1000 !important;
-    }
-
-    .gtav {
-      margin: 0 auto;
-    }
-
-    body {
-      padding: 0;
-      margin: 0;
-    }
-
-    html,
-    body,
-    #map {
-      height: 100%;
-      width: 100%;
-    }
-  </style>
-</head>
-<title>GTA V GrandRP Treasure Map</title>
-
-<body style="background-color:#0fa8d2">
-  <div id="map" style="width: 100%; height: 100%;background-color:#0fa8d2;">
-  </div>
-  <script>
-    //Initialize  Leaflet map
-    var map = L.map('map', {
-      crs: L.CRS.Simple,
-      minZoom: -3,
-      maxBoundsViscosity: 1.0
-    });
-    var bounds = [
-      [0, 0],
-      [8192, 8192]
-    ];
-    map.attributionControl.addAttribution('Designed for Anarchy 99 | GTA V &copy; <a href= "www.rockstargames.com">Rockstar Games</a> | GrandRP &copy; <a href= "www.gta5grand.com">GrandRP</a> | Icons &copy<a href= "www.flaticon.com"> flaticon</a>');
-    //Initialize each base layer
-    var atlas = L.imageOverlay('images/gtav.png', bounds).addTo(map);
-    var satellite = L.imageOverlay('images/GTAV_SATELLITE_8192x8192.png', bounds)
-    var road = L.imageOverlay('images/GTAV_ROADMAP_8192x8192.png', bounds)
-    map.fitBounds(bounds);
-    map.setMaxBounds(bounds)
-
-    // Load each layer from it's corresponding GeoJSON file
-    var treasure = L.geoJson(null, {
-      pointToLayer: function(feature, latlng) {
-        //Create icon for marker
-        var icn = L.icon({
-          iconUrl: 'icons/treasure.png',
-          iconSize: [48, 48], // size of the icon
+    <body style="background-color: #0fa8d2">
+      <div
+        id="map"
+        style="width: 100%; height: 100%; background-color: #0fa8d2"
+      ></div>
+      <script>
+        //Initialize  Leaflet map
+        var map = L.map('map', {
+          crs: L.CRS.Simple,
+          minZoom: -3,
+          maxBoundsViscosity: 1.0,
         });
-        var marker = L.marker(latlng, {
-          icon: icn
+        var bounds = [
+          [0, 0],
+          [8192, 8192],
+        ];
+        map.attributionControl.addAttribution(
+          'Designed for Anarchy 99 | GTA V &copy; <a href= "www.rockstargames.com">Rockstar Games</a> | GrandRP &copy; <a href= "www.gta5grand.com">GrandRP</a> | Icons &copy<a href= "www.flaticon.com"> flaticon</a>'
+        );
+        //Initialize each base layer
+        var atlas = L.imageOverlay('images/gtav.png', bounds).addTo(map);
+        var satellite = L.imageOverlay(
+          'images/GTAV_SATELLITE_8192x8192.png',
+          bounds
+        );
+        var road = L.imageOverlay('images/GTAV_ROADMAP_8192x8192.png', bounds);
+        map.fitBounds(bounds);
+        map.setMaxBounds(bounds);
+
+        // Load each layer from it's corresponding GeoJSON file
+        var treasure = L.geoJson(null, {
+          pointToLayer: function (feature, latlng) {
+            //Create icon for marker
+            var icn = L.icon({
+              iconUrl: 'icons/treasure.png',
+              iconSize: [48, 48], // size of the icon
+            });
+            var marker = L.marker(latlng, {
+              icon: icn,
+            });
+            marker.bindPopup(
+              '<font color=white><h4>' +
+                feature.properties.name +
+                '</h4>' +
+                "<img src='" +
+                feature.properties.imgname +
+                "' class='popupImage'></font>"
+            );
+            return marker;
+          },
         });
-        marker.bindPopup("<font color=white><h4>" + feature.properties.name + '</h4>' + "<img src='" + feature.properties.imgname + "' class='popupImage'></font>");
-        return marker;
-      }
-    })
-    $.getJSON("geojson/treasure.json", function(data) {
-      treasure.addData(data).addTo(map);
-    });
+        $.getJSON('geojson/treasure.json', function (data) {
+          treasure.addData(data).addTo(map);
+        });
 
-    //Create titles for each layer with mini icons to add to the Control
-    var overlay = {
-      "<img src='icons/treasure.png'align='center'width='30' height='30' /> Treasure": treasure
-    };
+        //Create titles for each layer with mini icons to add to the Control
+        var overlay = {
+          "<img src='icons/treasure.png'align='center'width='30' height='30' /> Treasure":
+            treasure,
+        };
 
-    //Create titles for each baselayer to add to the Control
-    var baseLayers = {
-      "Atlas": atlas,
-      "Road": road,
-      "Satellite": satellite
+        //Create titles for each baselayer to add to the Control
+        var baseLayers = {
+          Atlas: atlas,
+          Road: road,
+          Satellite: satellite,
+        };
+        //Create Control layer and add to map
+        var over = L.control
+          .layers(baseLayers, overlay, {
+            collapsed: false,
+            sortLayers: true,
+          })
+          .addTo(map);
 
-    }
-    //Create Control layer and add to map
-    var over = L.control.layers(baseLayers, overlay, {
-      collapsed: false,
-      sortLayers: true
-    }).addTo(map);
+        //Add GTAV logo to lower left hand corner
+        L.Control.Watermark = L.Control.extend({
+          onAdd: function (map) {
+            var img = L.DomUtil.create('img', 'gtav');
+            img.src = 'images/logo.png';
+            img.style.width = '200px';
+            return img;
+          },
+        });
+        L.control.watermark = function (opts) {
+          return new L.Control.Watermark(opts);
+        };
+        //Add logo to map
+        L.control
+          .watermark({
+            position: 'bottomleft',
+          })
+          .addTo(map);
 
-    //Add GTAV logo to lower left hand corner
-    L.Control.Watermark = L.Control.extend({
-      onAdd: function(map) {
+        //When the map's base layer is changed, change the color of the background
+        //to match the map
+        map.on('baselayerchange', function (layer) {
+          if (layer.name == 'Road') {
+            document.getElementById('map').style.background = '#1862ad';
+          }
+          if (layer.name == 'Satellite') {
+            document.getElementById('map').style.background = '#143d6b';
+          }
+          if (layer.name == 'Atlas') {
+            document.getElementById('map').style.background = '#0fa8d2';
+          }
+        });
 
-        var img = L.DomUtil.create('img', 'gtav');
-        img.src = 'images/logo.png';
-        img.style.width = '200px';
-        return img;
-      }
-    });
-    L.control.watermark = function(opts) {
-      return new L.Control.Watermark(opts);
-    }
-    //Add logo to map
-    L.control.watermark({
-      position: 'bottomleft'
-    }).addTo(map);
+        (async function () {
+          const treasureJsonString = await fetch(
+            'GrandRP-Treasure-Map/geojson/treasure.json'
+          );
+          const response = await treasureJsonString.json();
+          const treasures = response.features.filter(
+            (elem) => elem.properties.ptype === 'Treasure'
+          );
 
+          const onImageClick = (treasure) => (ev) => {
+            const coords = treasure.geometry.coordinates;
+            console.log(treasure, coords);
+            window.map.flyTo(coords.reverse(), 1);
+          };
+          window.map.on('click', function (e) {
+            var coord = e.latlng;
+            var lat = coord.lat;
+            var lng = coord.lng;
+            console.log(
+              'You clicked the map at latitude: ' +
+                lat +
+                ' and longitude: ' +
+                lng
+            );
+          });
 
-    //When the map's base layer is changed, change the color of the background
-    //to match the map
-    map.on('baselayerchange', function(layer) {
-      if (layer.name == "Road") {
-        document.getElementById("map").style.background = "#1862ad";
-      }
-      if (layer.name == "Satellite") {
-        document.getElementById("map").style.background = "#143d6b";
-      }
-      if (layer.name == "Atlas") {
-        document.getElementById("map").style.background = "#0fa8d2";
-      }
-    });
-  </script>
-</body>
+          const toggleButton = document.createElement('button', {
+            value: 'Test',
+            id: 'toggle-viewer',
+          });
+          const container = document.createElement('div', {
+            id: 'image-viewer',
+          });
+          container.style.width = '650px';
+          container.style.height = '100%';
+          container.style.position = 'absolute';
+          container.style.top = '0px';
+          container.style.zIndex = '9999';
+          container.style.overflowY = 'scroll';
 
+          treasures.map((t) => {
+            const tmpImage = document.createElement('img');
+            tmpImage.src = `${t.properties.imgname}`;
+            tmpImage.addEventListener('click', onImageClick(t));
+            container.appendChild(tmpImage);
+          });
+
+          document.body.appendChild(container);
+        })();
+      </script>
+    </body>
+  </html>
 </html>
