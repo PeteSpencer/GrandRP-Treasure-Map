@@ -3576,6 +3576,18 @@
         "type": "Point",
         "coordinates": [3880, 7276]
       }
+    },
+    {
+      "type": "Feature",
+      "properties": {
+        "name": "________Treasure 299________",
+        "imgname": "images/treasure/treasure299.jpg",
+        "ptype": "Treasure"
+      },
+      "geometry": {
+        "type": "Point",
+        "coordinates": [3740, 1816]
+      }
     }
   ]
 }
