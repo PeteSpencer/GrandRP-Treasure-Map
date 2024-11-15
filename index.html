@@ -192,6 +192,7 @@
             const coords = treasure.geometry.coordinates;
             console.log(treasure, coords);
             window.map.flyTo(coords.reverse(), 1);
+            treasure.marker.openPopup();
           };
           window.map.on('click', function (e) {
             var coord = e.latlng;
